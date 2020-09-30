@@ -1,0 +1,9 @@
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\bin\Debug\netcoreapp3.1\Logic.deps.json
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\bin\Debug\netcoreapp3.1\Logic.dll
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\bin\Debug\netcoreapp3.1\Logic.pdb
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\obj\Debug\netcoreapp3.1\Logic.csprojAssemblyReference.cache
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\obj\Debug\netcoreapp3.1\Logic.AssemblyInfoInputs.cache
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\obj\Debug\netcoreapp3.1\Logic.AssemblyInfo.cs
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\obj\Debug\netcoreapp3.1\Logic.csproj.CoreCompileInputs.cache
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\obj\Debug\netcoreapp3.1\Logic.dll
+C:\Users\DavidMarte\Documents\Proyectos\PruebaNetCore\Logic\obj\Debug\netcoreapp3.1\Logic.pdb

@@ -1,0 +1,287 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Examen CRUD .Net Core con Vue js</h1> 
+</div>
+
+<div class="row">
+    <div id="app">
+        <div class="form-inline"> 
+            
+        </div>
+
+        <div class="row">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Nombre Empleado</th>
+                        <th scope="col">Apellido Empleado</th>
+                        <th scope="col">Fecha Permiso</th>
+                        <th scope="col">Tipo Permiso</th>
+                        <th scope="col"></th>
+                        <th scope="col"><button type="button" data-toggle="modal" data-target="#modalEdit" class="btn btn-success" v-on:click="initCreate">Create</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr v-bind:key="element.idPermiso" v-for="element in permisos">
+                        <th scope="row">{{element.idPermiso}}</th>
+                        <td>{{element.nombreEmpleado}}</td>
+                        <td>{{element.apellidoEmpleado}}</td>
+                        <td>{{element.fechaPermiso}}</td>
+                        <td>{{element.tipoPermiso.descripcion}}</td>
+                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalEdit" v-on:click="setData(element)">Edit</button></td>
+                        <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalDelete" v-on:click="setDelete(element)">Delete</button></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div> 
+
+        <!-- Modal Saved and Edit -->
+        <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Permisos</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="validationServer01">First name</label>
+                                    <input v-model="permiso.nombreEmpleado" type="text" class="form-control " id="name" placeholder="First name" required>
+                                    <div class="invalid-feedback">
+                                        Obligatory field
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="validationServer02">Last name</label>
+                                    <input v-model="permiso.apellidoEmpleado" type="text" class="form-control " id="lastname" placeholder="Last name" required>
+ 
+                                    <div class="invalid-feedback">
+                                        Obligatory field
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="form-row"> 
+                                <div class="col-md-6 mb-1">
+
+                                    <label for="type">Type</label>
+                                    <select v-model="permiso.idTipoPermiso" class="form-control " id="type">
+                                        <option v-for="item in tipos" :value="item.idTipoPermiso">
+                                            {{item.descripcion}}
+                                        </option>
+                                    </select>
+
+
+                                    <div class="invalid-feedback">
+                                        Obligatory field
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" v-on:click="saveData">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal Saved and Edit -->
+
+        <!-- Modal Delete-->
+        <div class="modal" id="modalDelete" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Delete</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            You are sure you want to delete this data?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" v-on:click="deleteData">Yes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal Delete-->
+    </div>
+
+
+
+    </div>
+ 
+
+
+@section Scripts{
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                search: "",
+                message: "",
+                permiso: {
+                    IdPermiso: 0,
+                    idTipoPermiso: 0,
+                    nombreEmpleado: "",
+                    apellidoEmpleado: "",
+                    fechaPermiso: "",
+                    tipoPermiso: { idTipoPermiso: 1 }
+
+                },
+
+                msgErrorNombre: "",
+                msgErrorApellido: "",
+                msgErrorFecha: "",
+                msgErrorTipo: "",
+                error: false,
+                permisos: [],
+                update: false,
+                tipos: []
+
+            },
+            created: function () {
+                this.getPermisos();
+            },
+            methods: {
+                initCreate: function () {
+                    this.update = false;
+                    var date = new Date();
+                    this.permiso.idPermiso = 0;
+                    this.permiso.nombreEmpleado = "";
+                    this.permiso.apellidoEmpleado = "";
+                    this.permiso.fechaPermiso = date;
+                    this.permiso.idTipoPermiso = 0;
+                    this.permiso.tipoPermiso = { idTipoPermiso: 1 };
+                    $("#name").removeClass("is-invalid is-valid");
+                    $("#lastname").removeClass("is-invalid is-valid");
+                    $("#type").removeClass("is-invalid is-valid");
+                    this.getTipoPermiso();
+                },
+                setData: function (element) {
+                    this.initCreate();
+                    this.update = true;
+                    var date = new Date(element.fechaPermiso);
+                    console.log(date)
+                    this.permiso.idPermiso = element.idPermiso;
+                    this.permiso.nombreEmpleado = element.nombreEmpleado;
+                    this.permiso.apellidoEmpleado = element.apellidoEmpleado;
+                    this.permiso.fechaPermiso = element.fechaPermiso;
+                    this.permiso.idTipoPermiso = element.idTipoPermiso;
+                    this.permiso.tipoPermiso = element.tipoPermiso;
+                    this.getTipoPermiso();
+
+                },
+                setDelete: function (e) {
+                    this.permiso.idPermiso = e.idPermiso;
+                },
+                getTipoPermiso: function () {
+                    this.tipos = [];
+
+                    this.$http.get("/getTipo").then(function (resp) {
+                        this.tipos = resp.body;
+                        console.log("bodyalltt", resp.body);
+                    });
+
+
+                },
+                deleteData: function (e) {
+                    
+                    $.ajax({
+                        url: "/delete/" + this.permiso.idPermiso,
+                        method: "PUT", 
+                    }).done((data) => {
+
+                        this.getPermisos();
+                         $('#modalDelete').modal('hide');
+                        //this.permisos.splice(0, 0, permiso);
+
+                    });
+
+
+
+                },
+                saveData: function() {
+                    var permiso = { 
+                        IdPermiso: this.permiso.idPermiso,
+                        NombreEmpleado: this.permiso.nombreEmpleado,
+                        ApellidoEmpleado: this.permiso.apellidoEmpleado ,
+                        FechaPermisothis: this.permiso.fechaPermiso,
+                        IdTipoPermiso: this.permiso.idTipoPermiso  
+                    }
+                    var error = false;
+                    if (this.permiso.nombreEmpleado.trim() === "") {
+                        $("#name").addClass("is-invalid");
+                        error = true;
+                    } else {
+                        $("#name").removeClass("is-invalid").addClass("is-valid");
+                    }
+
+                    if (this.permiso.apellidoEmpleado.trim() === "") {
+                        $("#lastname").addClass("is-invalid");
+                        error = true;
+                    } else {
+                        $("#lastname").removeClass("is-invalid").addClass("is-valid");
+                    } 
+
+                    if (!this.permiso.idTipoPermiso > 0) {
+                        $("#type").addClass("is-invalid");
+                        error = true;
+                    } else {
+                        $("#type").removeClass("is-invalid").addClass("is-valid"); 
+                    }
+                    console.log("Error", error);
+                    if (error == false) {
+                        var url = "/update";
+                        if (this.update == true) {
+                            url = "/update";
+                        } else {
+                            url = "/create";
+                        }
+                        $.ajax({
+                            url: url,
+                            method: this.update == true ? "POST" : "PUT",
+                            data: permiso
+                        }).done( (data) =>{
+                         
+                            this.getPermisos();
+                            $('#modalEdit').modal('hide');
+                            //this.permisos.splice(0, 0, permiso);
+
+                        });
+                    }
+
+
+                },
+                getPermisos: function () {
+                    this.permisos = [];
+                    this.$http.get("http://localhost:51613/permisos").then(function (resp) {
+                        this.permisos = resp.body;
+                        console.log("bodyall", resp.body);
+                    });
+                }
+            }
+        });
+
+    </script>
+}
